@@ -8,3 +8,6 @@ services:
         dockerfile: dockerfile
       volumes:
         - ./../:/var/www/html
+      ports:
+        - '80:80'  # http
+        - '443:443' # https
