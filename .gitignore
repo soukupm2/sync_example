@@ -1,0 +1,6 @@
+app/config/config.local.neon
+www/js/dist/app/*
+vendor/*
+!vendor/.htaccess
+node_modules
+.idea/*

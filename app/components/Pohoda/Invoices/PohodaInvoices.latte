@@ -1,0 +1,50 @@
+<table class="table">
+    <thead>
+        <tr>
+            <th scope="col">ID</th>
+            <th scope="col">Date</th>
+            <th scope="col"># of items</th>
+            <th scope="col">Handle</th>
+        </tr>
+        {form filterForm}
+            <tr>
+                <th>{input id}</th>
+                <th>
+                    {input date_from}<br>
+                    {input date_to}
+                </th>
+                <th scope="col"></th>
+                <th scope="col"></th>
+            </tr>
+            <tr>
+                <th>{input submit 'class' => 'btn btn-primary'}
+                    {if !$filtersEmpty}
+                        <a href="{plink Pohoda:default}"><input type="button" name="cancel" value="Cancel" class="btn btn-danger"></a>
+                    {/if}
+                </th>
+            </tr>
+        {/form}
+    </thead>
+    <tbody>
+    {if $message === NULL}
+        {foreach $invoices as $invoice}
+            <tr>
+                <th scope="row">{$invoice->getInvoiceHeader()->getId()}</th>
+                <td>{$invoice->getInvoiceHeader()->getDate()}</td>
+                <td>
+                    {if $invoice->getInvoiceDetail()}
+                        {$invoice->getInvoiceDetail()->getInvoiceItemsCollection()->count()}
+                    {else}
+                        0
+                    {/if}
+                </td>
+                <td></td>
+            </tr>
+        {/foreach}
+    {else}
+        <tr>
+            <td colspan="4">{$message}</td>
+        </tr>
+    {/if}
+    </tbody>
+</table>

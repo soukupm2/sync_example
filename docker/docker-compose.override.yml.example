@@ -1,0 +1,7 @@
+version: '2'
+services:
+
+  sync-example.local:
+      ports:
+        - '80:80'  # http
+        - '443:443' # https

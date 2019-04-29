@@ -1,0 +1,52 @@
+<table class="table table-hover">
+    <thead>
+    <tr>
+        <th scope="col">ID</th>
+        <th scope="col">Storage</th>
+        <th scope="col">Name</th>
+        <th scope="col">Purchasing price</th>
+        <th scope="col">Selling price</th>
+        <th scope="col">Description</th>
+    </tr>
+    {form filterForm}
+        <tr>
+            <th>{input id 'class' => 'form-control', 'placeholder' => 'ID'}</th>
+            <th>{input storage_ids 'class' => 'form-control', 'placeholder' => 'Storage IDS'}</th>
+            <th>{input name 'class' => 'form-control', 'placeholder' => 'Name'}</th>
+            <th></th>
+            <th></th>
+            <th></th>
+        </tr>
+        <tr>
+            <th>{input submit 'class' => 'btn btn-primary'}
+                {if !$filtersEmpty}
+                    <a href="{plink Pohoda:stock}"><input type="button" name="cancel" value="Cancel" class="btn btn-danger"></a>
+                {/if}
+            </th>
+            <th></th>
+            <th></th>
+            <th></th>
+            <th></th>
+            <th></th>
+        </tr>
+    {/form}
+    </thead>
+    <tbody>
+    {if $message === NULL && $stock !== NULL}
+        {foreach $stock as $item}
+            <tr>
+                <th scope="row">{$item->getStockHeader()->getId()}</th>
+                <td>{$item->getStockHeader()->getStorageIds()}</td>
+                <td>{$item->getStockHeader()->getName()}</td>
+                <td>{$item->getStockHeader()->getSellingPrice()} Kč</td>
+                <td>{$item->getStockHeader()->getPurchasingPrice()} Kč</td>
+                <td>{$item->getStockHeader()->getDescription()}</td>
+            </tr>
+        {/foreach}
+    {else}
+        <tr>
+            <td colspan="6">{$message}</td>
+        </tr>
+    {/if}
+    </tbody>
+</table>

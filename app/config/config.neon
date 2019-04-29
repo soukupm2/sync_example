@@ -1,0 +1,53 @@
+parameters:
+
+#flexibee:
+#    baseUri: 'http://localhost'
+#    username: 'soukupm'
+#    password: 'testovaci'
+#    companyId: 'testovaci'
+#    port: 5434
+
+flexibee:
+    baseUri: 'https://demo.flexibee.eu'
+    username: 'winstrom'
+    password: 'winstrom'
+    companyId: 'demo_sk'
+    port: null
+
+#pohoda:
+#    baseUri: 'http://localhost'
+#    username: '@'
+#    password: ''
+#    companyId: '12345678'
+#    port: 1111
+
+pohoda:
+    baseUri: 'host.docker.internal'
+    username: '@'
+    password: ''
+    companyId: '12345678'
+    port: 1111
+
+application:
+	errorPresenter: Error
+	mapping:
+		*: App\*Module\Presenters\*Presenter
+
+
+session:
+	expiration: 14 days
+
+extensions:
+    pohoda: AccSync\Pohoda\PohodaConnectionExtension
+    flexibee: AccSync\FlexiBee\FlexiBeeConnectionExtension
+
+
+services:
+    router: App\RouterFactory::createRouter
+    - App\Component\IPohodaInvoicesFactory
+    - App\Component\IStockListFactory
+    - App\Component\IStockItemFormFactory
+    - App\Model\AccSyncFacade
+
+#    - AccSync\Pohoda\PohodaConnectionFactory(%pohoda.baseUri%, %pohoda.username%, %pohoda.password%, %pohoda.companyId%, %pohoda.port%)
+#    - AccSync\FlexiBee\FlexiBeeConnectionFactory(%flexi-bee.baseUri%, %flexi-bee.username%, %flexi-bee.password%, %flexi-bee.companyId%, %flexi-bee.port%)

@@ -1,0 +1,26 @@
+{
+  "name": "web-soukupm",
+  "version": "1.0.0",
+  "dependencies": {
+    "webpack": "^4.30.0"
+  },
+  "scripts": {
+    "start": "webpack --config webpack.config.js --mode=development",
+    "watch": "webpack --config webpack.config.js --mode=development --watch",
+    "production": "webpack --config webpack.config.js --mode=production",
+    "development": "webpack --config webpack.config.js --mode=development"
+  },
+  "devDependencies": {
+    "@babel/core": "^7.4.3",
+    "@babel/preset-env": "^7.4.3",
+    "@webpack-cli/init": "^0.1.5",
+    "babel-loader": "^8.0.5",
+    "babel-plugin-syntax-dynamic-import": "^6.18.0",
+    "css-loader": "^2.1.1",
+    "less": "^3.9.0",
+    "less-loader": "^4.1.0",
+    "style-loader": "^0.23.1",
+    "uglifyjs-webpack-plugin": "^2.1.2",
+    "webpack-cli": "^3.3.0"
+  }
+}

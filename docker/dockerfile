@@ -1,0 +1,91 @@
+FROM debian:jessie
+
+MAINTAINER Miroslav Soukup <miroslav.soukup2@gmail.com>
+
+# Nastavení Debianu
+ENV DEBIAN_FRONTEND=noninteractive
+
+# Ošetření chyby: invoke-rc.d: policy-rc.d denied execution of start.
+RUN sed -i "s/^exit 101$/exit 0/" /usr/sbin/policy-rc.d
+
+# Aktualizace definice balíčků a instalace základních balíčků
+RUN apt-get update && \
+    apt-get install -y --no-install-recommends dialog apt-utils git mc htop nmap wget curl \
+    apt-transport-https ca-certificates openssh-client
+
+# Instalace a nastavení Apache
+ENV APACHE_RUN_USER www-data
+ENV APACHE_RUN_GROUP www-data
+ENV APACHE_LOG_DIR /var/log/apache2
+ENV APACHE_LOCK_DIR /var/lock/apache2
+ENV APACHE_PID_FILE /var/run/apache2.pid
+
+RUN apt-get update && \
+    apt-get install -y apache2 && \
+    a2enmod include && \
+    a2enmod rewrite && \
+    a2enmod proxy_fcgi && \
+    rm /etc/apache2/sites-enabled/000-default.conf
+
+COPY ./conf.d/apache/apache2.conf /etc/apache2/
+
+# Instalace a nastavení PHP (7.3)
+# Pro běžný provoz budeme používat PHP balíčky z repozitáře: https://deb.sury.org
+RUN apt-get install -y apt-transport-https lsb-release ca-certificates && \
+    wget -O /etc/apt/trusted.gpg.d/php.gpg https://packages.sury.org/php/apt.gpg && \
+    sh -c 'echo "deb https://packages.sury.org/php/ $(lsb_release -sc) main" > /etc/apt/sources.list.d/php.list'
+    
+RUN apt-get update && \
+    apt-get install -y --no-install-recommends \
+    php7.3 \
+    php7.3-cli \
+    libapache2-mod-php7.3 \
+    php7.3-curl \
+    php7.3-intl \
+    php7.3-gd \
+    php7.3-mbstring \
+    php7.3-pdo \
+    php7.3-mysql \
+    php7.3-json \
+    php7.3-zip \
+    php7.3-xml \
+#    php7.3-imagick \
+    php7.3-igbinary
+
+COPY ./conf.d/php/php.ini /etc/php/7.3/apache2/
+COPY ./conf.d/php/php.ini /etc/php/7.3/cli/
+
+# korekce práv k adresáři, kam si php ukládá session
+RUN chown www-data:www-data /var/lib/php/sessions
+
+# Instalace Composeru
+ENV COMPOSER_ALLOW_SUPERUSER 1
+RUN curl -sS https://getcomposer.org/installer | php -- --install-dir=/usr/local/bin --filename=composer
+
+# Instalace Node.js a NPM
+RUN curl -sL https://deb.nodesource.com/setup_10.x | bash - && \
+    apt-get install -y nodejs
+
+# Instalace Yarnu který nahrazuje NPM
+RUN curl -sS https://dl.yarnpkg.com/debian/pubkey.gpg | apt-key add - && \
+    echo "deb https://dl.yarnpkg.com/debian/ stable main" | tee /etc/apt/sources.list.d/yarn.list && \
+    apt-get update && apt-get install -y yarn
+
+# Pročištění souborů a cache dockerimage
+RUN apt-get clean -y && apt-get autoclean -y && apt-get autoremove -y && \
+    rm -rf /var/lib/apt/lists/* /var/lib/log/* /tmp/* /var/tmp/*
+
+# Nastaveni domovskeho adresare
+WORKDIR /var/www/html
+
+# Otevření potřebných portů
+# HTTP
+EXPOSE 80
+# HTTPS
+EXPOSE 443
+
+# Nastartování služeb při zapnutí konteineru
+COPY ./conf.d/bash/container.start.sh /usr/local/bin/
+RUN sed -i 's/\r$//' /usr/local/bin/container.start.sh
+RUN chmod +x /usr/local/bin/container.start.sh
+CMD /usr/local/bin/container.start.sh

@@ -1,0 +1,10 @@
+version: '2'
+services:
+
+  sync-example.local:
+      container_name: 'sync-example.local'
+      build:
+        context: ./
+        dockerfile: dockerfile
+      volumes:
+        - ./../:/var/www/html
