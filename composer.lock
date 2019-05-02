@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "3d124dcecdbab96f2026f3e489e298fd",
+    "content-hash": "8224656c65dae6238f110bc6673c5938",
     "packages": [
         {
             "name": "latte/latte",
@@ -1249,16 +1249,16 @@
         },
         {
             "name": "soukupm/acc-sync",
-            "version": "0.1.6-alpha",
+            "version": "0.1.7-alpha",
             "source": {
                 "type": "git",
                 "url": "https://github.com/soukupm2/acc-sync.git",
-                "reference": "5e61a6a0b3266f26a840c93ac36e3f0bfc17408b"
+                "reference": "8b2624d5868d8341f11484886540267266300ff4"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/soukupm2/acc-sync/zipball/5e61a6a0b3266f26a840c93ac36e3f0bfc17408b",
-                "reference": "5e61a6a0b3266f26a840c93ac36e3f0bfc17408b",
+                "url": "https://api.github.com/repos/soukupm2/acc-sync/zipball/8b2624d5868d8341f11484886540267266300ff4",
+                "reference": "8b2624d5868d8341f11484886540267266300ff4",
                 "shasum": ""
             },
             "require": {
@@ -1289,7 +1289,7 @@
             "keywords": [
                 "Accounting"
             ],
-            "time": "2019-05-02T12:02:02+00:00"
+            "time": "2019-05-02T13:44:15+00:00"
         },
         {
             "name": "tracy/tracy",
