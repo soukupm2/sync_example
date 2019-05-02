@@ -2,7 +2,11 @@
 
 namespace App\Model;
 
+use AccSync\FlexiBee\Data\FlexiBeeHelper;
+use AccSync\FlexiBee\Enum\EDefinedValues;
+use AccSync\FlexiBee\Enum\EOperators;
 use AccSync\FlexiBee\FlexiBeeConnectionFactory;
+use AccSync\FlexiBee\UrlFilter\FlexiBeeCondition;
 use AccSync\Pohoda\Collection\Stock\StockCollection;
 use AccSync\Pohoda\Data\InvoiceParser;
 use AccSync\Pohoda\Data\StockParser;
@@ -10,6 +14,7 @@ use AccSync\Pohoda\Entity\Stock\Stock;
 use AccSync\Pohoda\Entity\Stock\StockHeader;
 use AccSync\Pohoda\PohodaConnectionFactory;
 use AccSync\Pohoda\Requests\GetDataRequest\ListInvoiceRequest;
+use Nette\Utils\Validators;
 
 class AccSyncFacade
 {
@@ -31,13 +36,120 @@ class AccSyncFacade
         $this->pohodaConnectionFactory = $pohodaConnectionFactory;
     }
 
-    public function getPriceListFlexiBee()
+    /**
+     * @param array $filters
+     * @return \stdClass
+     * @throws \AccSync\FlexiBee\Exception\FlexiBeeConnectionException
+     * @throws \ErrorException
+     */
+    public function getPriceListFlexiBee(array $filters)
     {
         $connection = $this->flexiBeeConnectionFactory->create();
 
-        $connection->getPriceList();
+        $conditions = [];
+
+        if (!empty($filters['id']))
+        {
+            $condition = new FlexiBeeCondition();
+            $condition->setIdentifier('id');
+            $condition->setValue($filters['id']);
+            $condition->setOperator(EOperators::EQUAL);
+
+            $conditions[] = $condition;
+        }
+
+        if (!empty($filters['code']))
+        {
+            $condition = new FlexiBeeCondition();
+            $condition->setIdentifier('kod');
+            $condition->setValue('\'' . $filters['code'] . '\'');
+            $condition->setOperator(EOperators::LIKE);
+
+            $conditions[] = $condition;
+        }
+
+        if (!empty($filters['name']))
+        {
+            $condition = new FlexiBeeCondition();
+            $condition->setIdentifier('nazev');
+            $condition->setValue('\'' . $filters['name'] . '\'');
+            $condition->setOperator(EOperators::LIKE);
+
+            $conditions[] = $condition;
+        }
+
+        $filter = FlexiBeeHelper::joinConditions(EOperators::LOGICAL_AND, ...$conditions);
+
+        $connection->getPriceList()
+            ->setUrlFilter($filter)
+            ->setOrder('id', EDefinedValues::DESC);
+
 
         $result = $connection->sendRequest();
+
+        if ($connection->hasError())
+        {
+            throw new \ErrorException($connection->getError(), 0, E_WARNING);
+        }
+
+        return $result;
+    }
+
+    /**
+     * @param int $id
+     * @return \stdClass|null
+     * @throws \AccSync\FlexiBee\Exception\FlexiBeeConnectionException
+     */
+    public function getPriceListItemFlexiBee($id)
+    {
+        if (!Validators::isNumericInt($id))
+        {
+            return NULL;
+        }
+
+        $connection = $this->flexiBeeConnectionFactory->create();
+
+        $condition = new FlexiBeeCondition();
+        $condition->setIdentifier('id');
+        $condition->setValue($id);
+        $condition->setOperator(EOperators::EQUAL);
+
+        $connection->getPriceList()
+            ->setUrlFilter($condition->getFullCondition());
+
+        $result = $connection->sendRequest();
+
+        return $result;
+    }
+
+    /**
+     * @param array $values
+     * @param null  $id
+     * @return \stdClass
+     * @throws \AccSync\FlexiBee\Exception\FlexiBeeConnectionException
+     * @throws \ErrorException
+     */
+    public function sendFlexiBeePriceListItem($values, $id = NULL)
+    {
+        $connection = $this->flexiBeeConnectionFactory->create();
+
+        $request = $connection->sendPriceListItem()
+            ->setCode($values['code'])
+            ->setName($values['name'])
+            ->setBasePrice($values['basePrice'])
+            ->setVatRate($values['vatRate']);
+
+        if (!empty($id))
+        {
+            $request->setId($id);
+        }
+
+        $result = $connection->sendRequest();
+
+        if ($connection->hasError())
+        {
+            throw new \ErrorException($connection->getError(), 0, E_WARNING);
+        }
 
         return $result;
     }
@@ -136,6 +248,12 @@ class AccSyncFacade
         return $parsed;
     }
 
+    /**
+     * @param $values
+     * @return bool
+     * @throws \AccSync\Pohoda\Exception\PohodaConnectionException
+     * @throws \ErrorException
+     */
     public function sendPohodaStock($values)
     {
         $connection = $this->pohodaConnectionFactory->create();
@@ -188,7 +306,7 @@ class AccSyncFacade
 
         if ($connection->hasError())
         {
-            throw new \ErrorException($connection->getError());
+            throw new \ErrorException($connection->getError(), 0, E_WARNING);
         }
 
         return TRUE;

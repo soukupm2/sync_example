@@ -1,0 +1,25 @@
+{form form}
+    <div class="row justify-content-center mt-5">
+        <div class="col-md-6">
+            <div class="form-group">
+                {label code}
+                {input code 'class' => 'form-control'}
+            </div>
+            <div class="form-group">
+                {label name}
+                {input name 'class' => 'form-control'}
+            </div>
+            <div class="form-group">
+                {label basePrice}
+                {input basePrice 'class' => 'form-control'}
+            </div>
+            <div class="form-group">
+                {label vatRate}
+                {input vatRate 'class' => 'form-control'}
+            </div>
+            <div class="float-right">
+                <button n:name="submit" type="submit" class="btn btn-primary">Send</button>
+            </div>
+        </div>
+    </div>
+{/form}

@@ -4,6 +4,7 @@ namespace App\Component;
 
 use AccSync\Pohoda\Exception\PohodaConnectionException;
 use App\Model\AccSyncFacade;
+use App\Model\Enum\EFlashMessage;
 use Nette\Application\UI\Control;
 use Nette\Application\UI\Form;
 
@@ -68,8 +69,6 @@ class StockItemForm extends Control
     {
         $values = $form->getValues();
 
-        \Tracy\Debugger::barDump($values);
-
         try
         {
             $this->accSyncFacade->sendPohodaStock($values);
@@ -77,17 +76,17 @@ class StockItemForm extends Control
         catch (PohodaConnectionException $e)
         {
             \Tracy\Debugger::log($e->getMessage(), 'error');
-            $this->getPresenter()->flashMessage('Check connection to Pohoda', 'error');
+            $this->getPresenter()->flashMessage('Check connection to Pohoda', EFlashMessage::ERROR);
             $this->getPresenter()->redirect('this');
         }
         catch (\ErrorException $e)
         {
             \Tracy\Debugger::log($e->getMessage(), 'error');
-            $this->getPresenter()->flashMessage($e->getMessage(), 'error');
+            $this->getPresenter()->flashMessage($e->getMessage(), EFlashMessage::ERROR);
             $this->getPresenter()->redirect('this');
         }
 
-        $this->getPresenter()->flashMessage('Stock item saved', 'success');
+        $this->getPresenter()->flashMessage('Stock item saved', EFlashMessage::SUCCESS);
         $this->getPresenter()->redirect('Pohoda:stock');
     }
 }

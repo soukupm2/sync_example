@@ -44,10 +44,12 @@ extensions:
 
 services:
     router: App\RouterFactory::createRouter
+    - App\Model\AccSyncFacade
     - App\Component\IPohodaInvoicesFactory
     - App\Component\IStockListFactory
     - App\Component\IStockItemFormFactory
-    - App\Model\AccSyncFacade
+    - App\Component\FlexiBee\PriceList\IPriceListFactory
+    - App\Component\FlexiBee\PriceList\IPriceListItemFormFactory
 
 #    - AccSync\Pohoda\PohodaConnectionFactory(%pohoda.baseUri%, %pohoda.username%, %pohoda.password%, %pohoda.companyId%, %pohoda.port%)
 #    - AccSync\FlexiBee\FlexiBeeConnectionFactory(%flexi-bee.baseUri%, %flexi-bee.username%, %flexi-bee.password%, %flexi-bee.companyId%, %flexi-bee.port%)

@@ -1,0 +1,51 @@
+<table class="table table-hover">
+    <thead>
+    <tr>
+        <th scope="col">ID</th>
+        <th scope="col">Code</th>
+        <th scope="col">Name</th>
+        <th scope="col">Default price</th>
+        <th scope="col">Vat rate</th>
+    </tr>
+    {form filterForm}
+        <tr>
+            <th>{input id 'class' => 'form-control', 'placeholder' => 'ID'}</th>
+            <th>{input code 'class' => 'form-control', 'placeholder' => 'Code'}</th>
+            <th>{input name 'class' => 'form-control', 'placeholder' => 'Name'}</th>
+            <th></th>
+            <th></th>
+            <th></th>
+            <th></th>
+        </tr>
+        <tr>
+            <th>{input submit 'class' => 'btn btn-primary'}
+                {if !$filtersEmpty}
+                    <a href="{plink FlexiBee:priceList}"><input type="button" name="cancel" value="Cancel" class="btn btn-danger"></a>
+                {/if}
+            </th>
+            <th></th>
+            <th></th>
+            <th></th>
+            <th></th>
+            <th></th>
+        </tr>
+    {/form}
+    </thead>
+    <tbody>
+        {if $message === NULL && $priceListItems !== NULL}
+            {foreach $priceListItems as $item}
+                <tr>
+                    <th scope="row">{$item->id}</th>
+                    <td>{$item->kod}</td>
+                    <td>{$item->nazev}</td>
+                    <td>{$item->cenaZakl}</td>
+                    <td>{ifset $item->szbDph}{$item->szbDph}{else}none{/ifset}</td>
+                </tr>
+            {/foreach}
+        {else}
+            <tr>
+                <td colspan="5">{$message}</td>
+            </tr>
+        {/if}
+    </tbody>
+</table>
