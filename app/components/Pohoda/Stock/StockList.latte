@@ -18,10 +18,17 @@
             <th></th>
         </tr>
         <tr>
-            <th>{input submit 'class' => 'btn btn-primary'}
-                {if !$filtersEmpty}
-                    <a href="{plink Pohoda:stock}"><input type="button" name="cancel" value="Cancel" class="btn btn-danger"></a>
-                {/if}
+            <th>
+                <div class="row">
+{*                    <div class="col-sm-2">*}
+                        {input submit 'class' => 'btn btn-primary'}
+{*                    </div>*}
+                    {if !$filtersEmpty}
+{*                    <div class="col-sm-2">*}
+                        <a href="{plink Pohoda:stock}"><input type="button" name="cancel" value="Cancel" class="btn btn-danger"></a>
+{*                    </div>*}
+                    {/if}
+                </div>
             </th>
             <th></th>
             <th></th>

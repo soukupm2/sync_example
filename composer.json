@@ -20,7 +20,7 @@
 		"nette/utils": "^2.4",
 		"latte/latte": "^2.4",
 		"tracy/tracy": "^2.4",
-		"soukupm/acc-sync": "0.1.7-alpha",
+		"soukupm/acc-sync": "0.2.0",
 		"marc-mabe/php-enum": "^3.1"
 	},
 	"require-dev": {

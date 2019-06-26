@@ -11,7 +11,7 @@ flexibee:
     baseUri: 'https://demo.flexibee.eu'
     username: 'winstrom'
     password: 'winstrom'
-    companyId: 'demo_sk'
+    companyId: 'demo'
     port: null
 
 #pohoda:

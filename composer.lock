@@ -1,10 +1,10 @@
 {
     "_readme": [
         "This file locks the dependencies of your project to a known state",
-        "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
+        "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#composer-lock-the-lock-file",
         "This file is @generated automatically"
     ],
-    "content-hash": "8224656c65dae6238f110bc6673c5938",
+    "content-hash": "41e6811bbd47302aa2acc29ab148be41",
     "packages": [
         {
             "name": "latte/latte",
@@ -1249,16 +1249,16 @@
         },
         {
             "name": "soukupm/acc-sync",
-            "version": "0.1.7-alpha",
+            "version": "0.2.0",
             "source": {
                 "type": "git",
                 "url": "https://github.com/soukupm2/acc-sync.git",
-                "reference": "8b2624d5868d8341f11484886540267266300ff4"
+                "reference": "df07c3f36e05e382070ec5f2707dffe84a75a033"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/soukupm2/acc-sync/zipball/8b2624d5868d8341f11484886540267266300ff4",
-                "reference": "8b2624d5868d8341f11484886540267266300ff4",
+                "url": "https://api.github.com/repos/soukupm2/acc-sync/zipball/df07c3f36e05e382070ec5f2707dffe84a75a033",
+                "reference": "df07c3f36e05e382070ec5f2707dffe84a75a033",
                 "shasum": ""
             },
             "require": {
@@ -1289,7 +1289,7 @@
             "keywords": [
                 "Accounting"
             ],
-            "time": "2019-05-02T13:44:15+00:00"
+            "time": "2019-06-26T14:52:18+00:00"
         },
         {
             "name": "tracy/tracy",
@@ -1424,9 +1424,7 @@
     ],
     "aliases": [],
     "minimum-stability": "stable",
-    "stability-flags": {
-        "soukupm/acc-sync": 15
-    },
+    "stability-flags": [],
     "prefer-stable": false,
     "prefer-lowest": false,
     "platform": {

@@ -49,6 +49,11 @@ class PriceList extends Control
             $message = $e->getMessage();
         }
 
+        if (empty($priceListItems))
+        {
+            $message = 'No data found';
+        }
+
         $this->template->message = $message;
         $this->template->priceListItems = $priceListItems;
         $this->template->filtersEmpty = $this->checkFiltersAreEmpty();

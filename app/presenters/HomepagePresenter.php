@@ -5,7 +5,6 @@ namespace App\Presenters;
 use AccSync\FlexiBee\Data\FlexiBeeHelper;
 use AccSync\FlexiBee\FlexiBeeConnectionFactory;
 use AccSync\FlexiBee\Requests\GetDataRequest\PriceListRequest;
-use AccSync\FlexiBee\UrlFilter\Condition;
 use AccSync\Pohoda\Collection\Invoice\InvoicesCollection;
 use AccSync\Pohoda\Data\InvoiceParser;
 use AccSync\Pohoda\Data\StockParser;
@@ -41,7 +40,7 @@ final class HomepagePresenter extends Nette\Application\UI\Presenter
 
     public function actionDefault()
     {
-        $this->redirect('Pohoda:default');
+        $this->redirect('Pohoda:stock');
 
         $connection = $this->pohodaConnectionFactory->create();
         $request = new ListOrderRequest(123456, 12345678, ListOrderRequest::ORDER_TYPE_ISSUED);
@@ -54,36 +53,99 @@ final class HomepagePresenter extends Nette\Application\UI\Presenter
     {
         $connection = $this->flexiBeeConnectionFactory->create();
 
-        $connection->getPriceList();
+        $request = $connection->sendIssuedInvoiceRequest()
+            ->setId(140)
+            ->setCode('00000005/19-1')
+            ->setDescription('testing')
+            ->setLeftToPay(100)
+            ->setType('code:FAKTURA')
+            ->setDueDate('2019')
+            ->setReceivedNumber(1);
+
+        \Tracy\Debugger::barDump($request->getRawData());
 
         $result = $connection->sendRequest();
 
+        \Tracy\Debugger::barDump($result);
         \Tracy\Debugger::barDump($connection->getError());
-
-        $result = json_decode($result);
 
         $this->template->result = $result;
 
+    }
+
+    public function actionFlexir()
+    {
+        $connection = $this->flexiBeeConnectionFactory->create();
+
+        $request = $connection->sendReceivedInvoiceRequest()
+            ->setCode('testasldfjasl')
+            ->setDescription('testing')
+            ->setLeftToPay(100)
+            ->setVariableSymbol(12346468661353535)
+            ->setDueDate('2019')
+            ->setType('code:FAKTURA');
+
+        \Tracy\Debugger::barDump($request->getRawData());
+
+        $result = $connection->sendRequest();
+
+        \Tracy\Debugger::barDump($result);
+        \Tracy\Debugger::barDump($connection->getError());
+
+        $this->template->result = $result;
+
+    }
+
+    public function actionFlexio()
+    {
+        $connection = $this->flexiBeeConnectionFactory->create();
+
+        $request = $connection->sendReceivedOrderRequest()
+            ->setCode('testasldfjasl')
+            ->setType('code:OBP')
+            ->setDescription('testing');
+
+        \Tracy\Debugger::barDump($request->getRawData());
+
+        $result = $connection->sendRequest();
+
+        \Tracy\Debugger::barDump($result);
+        \Tracy\Debugger::barDump($connection->getError());
+
+        $this->template->result = $result;
+        $this->template->setFile(__DIR__ . '/templates/Homepage/flexi.latte');
+    }
+
+    public function actionFlexiov()
+    {
+        $connection = $this->flexiBeeConnectionFactory->create();
+
+        $request = $connection->sendIssuedOrderRequest()
+            ->setCode('testasldfjasl')
+            ->setType('code:OBV')
+            ->setDescription('testing');
+
+        \Tracy\Debugger::barDump($request->getRawData());
+
+        $result = $connection->sendRequest();
+
+        \Tracy\Debugger::barDump($result);
+        \Tracy\Debugger::barDump($connection->getError());
+
+        $this->template->result = $result;
+        $this->template->setFile(__DIR__ . '/templates/Homepage/flexi.latte');
     }
 
     public function actionFlexit()
     {
         $connection = $this->flexiBeeConnectionFactory->create();
 
-
-        $expression1 = new Condition();
-        $expression1->setIdentifier('id');
-        $expression1->setOperator('=');
-        $expression1->setValue(4);
-
-        $connection->getPriceList()
-            ->setUrlFilter($expression1->getFullCondition());
+        $connection->getIssuedOrders();
 
         $result = $connection->sendRequest();
 
-        $result = json_decode($result);
-
         \Tracy\Debugger::barDump($result);
+
         $this->template->result = $result;
 
     }
@@ -216,7 +278,7 @@ final class HomepagePresenter extends Nette\Application\UI\Presenter
         $invoicesCollection = new InvoicesCollection();
         $invoicesCollection->add($invoice);
 
-        $connection->setSendInvoiceRequest($invoicesCollection);
+        $request = $connection->setSendInvoiceRequest($invoicesCollection);
 
         $connection->sendRequest();
 
